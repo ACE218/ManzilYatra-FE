@@ -1,38 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 import Hero from "./Hero";
 import Service from "./Service";
 import Recommendation from "./Recommendation";
 import Testimonials from "./Testimonials";
 import Footer from "./Footer";
-import "../Styles/MainPage.css";
 
 function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [firstName, setFirstName] = useState("");
+  const pageVariants = {
+    initial: { opacity: 0 },
+    in: { opacity: 1 },
+    out: { opacity: 0 }
+  };
 
-  useEffect(() => {
-    const authKey = localStorage.getItem("authKey");
-    const name = localStorage.getItem("name");
-
-    if (authKey) {
-      setIsLoggedIn(true);
-      setFirstName(name ? name.split(" ")[0] : "User");
-    }
-  }, []);
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.5
+  };
 
   return (
-    <div className="main-page-container">
-      {isLoggedIn && (
-        <div className="user-greeting">
-          <h2>Hello, {firstName}!</h2>
-        </div>
-      )}
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="main-page"
+    >
       <Hero />
-      <Recommendation />
       <Service />
+      <Recommendation />
       <Testimonials />
       <Footer />
-    </div>
+    </motion.div>
   );
 }
 

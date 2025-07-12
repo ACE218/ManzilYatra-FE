@@ -1,40 +1,121 @@
 .service {
+  padding: 4rem 0;
+  background: #FFF;
+  position: relative;
+}
+
+.sectionTitle {
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  color: #2C3E50;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: #F36F09;
+  margin: 0.5rem auto;
+  border-radius: 2px;
+  animation: expandWidth 1.5s ease-in-out infinite;
+}
+
+.servicesContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  padding: 3rem 0;
-  /* margin-left: 6rem; */
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
-.services {
-  background-color: aliceblue;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  transition: 0.3s ease-in-out;
-  cursor: pointer;
-  box-shadow: rgb(100, 100, 100, 0.2) 0px 17px 20px 0px;
-}
-
-.services:hover {
-  transform: translateX(0.5rem) translateY(-1rem);
-  box-shadow: rgb(0, 0, 0, 0.4) 0px 5px 15px;
-}
-
-.services img {
-  width: 30px;
-}
-
-.services p {
-  font-size: 0.9rem;
-}
-
-/* responsive section */
-@media screen and (max-width: 450px) {
-  .service {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2rem;
-    padding: 3rem 1rem;
+@media (min-width: 640px) {
+  .servicesContainer {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (min-width: 1024px) {
+  .servicesContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.serviceCard {
+  background: #F3F4F6;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.serviceCard:nth-child(1) { animation-delay: 0.1s; }
+.serviceCard:nth-child(2) { animation-delay: 0.2s; }
+.serviceCard:nth-child(3) { animation-delay: 0.3s; }
+.serviceCard:nth-child(4) { animation-delay: 0.4s; }
+
+.serviceCard:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.icon {
+  margin-bottom: 1rem;
+}
+
+.icon img {
+  width: 4rem;
+  height: 4rem;
+  transition: transform 0.3s ease;
+}
+
+.icon img:hover {
+  transform: scale(1.1);
+}
+
+.serviceTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+}
+
+.serviceDescription {
+  color: #4B5563;
+  font-size: 0.875rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: #F36F09;
+  color: #ECF0F1;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes expandWidth {
+  0% { width: 0; }
+  50% { width: 150px; }
+  100% { width: 100px; }
 }

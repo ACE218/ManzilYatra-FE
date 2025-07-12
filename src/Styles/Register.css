@@ -1,36 +1,25 @@
-/* ========== LOGIN CONTAINER ========== */
-.loginContainer {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to bottom, #1C2526, #2E3B3E);
-  position: relative;
-  overflow: hidden;
-}
-
-/* ========== FORM STYLING ========== */
-.form {
-  background: #FFF;
+/* ========== REGISTER CONTAINER ========== */
+.register-container {
+  max-width: 400px;
+  margin: 4rem auto;
   padding: 2rem;
+  background: #FFF;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 28rem;
+  text-align: center;
   animation: slideInUp 0.5s ease-out;
 }
 
 /* Heading */
-.form h1 {
-  font-size: 1.875rem;
+.register-container h1 {
+  font-size: 2rem;
   font-weight: 700;
   color: #2C3E50;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin-bottom: 2rem;
   position: relative;
 }
 
-.form h1::after {
+.register-container h1::after {
   content: "";
   display: block;
   width: 80px;
@@ -41,45 +30,45 @@
 }
 
 /* ========== INPUT BOX ========== */
-.inputBox {
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
-  position: relative;
 }
 
-.inputBox label {
-  display: block;
-  font-size: 0.875rem;
+.input-box label {
+  font-size: 1rem;
   font-weight: 500;
   color: #2C3E50;
-  margin-bottom: 0.25rem;
+  text-align: left;
   transition: color 0.3s ease;
 }
 
-.inputBox label:hover {
+.input-box label:hover {
   color: #F36F09;
 }
 
-.inputBox input {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
+.input-box input {
+  padding: 0.75rem;
   border: 1px solid #BDC3C7;
   border-radius: 5px;
   font-size: 1rem;
-  outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.inputBox input:focus {
+.input-box input:focus {
   border-color: #F36F09;
   box-shadow: 0 0 8px rgba(243, 111, 9, 0.3);
+  outline: none;
 }
 
 /* ========== BUTTON STYLING ========== */
 .btn {
   width: 100%;
+  padding: 1rem;
   background: #F36F09;
   color: #ECF0F1;
-  padding: 0.5rem;
   border: none;
   border-radius: 5px;
   font-size: 1.1rem;
@@ -124,6 +113,33 @@
   display: block;
 }
 
+/* ========== TOOLTIP ========== */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2C3E50;
+  color: #ECF0F1;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* ========== ANIMATIONS ========== */
 @keyframes slideInUp {
   from {
@@ -139,5 +155,17 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+  .register-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+
+  .register-container h1 {
+    font-size: 1.5rem;
   }
 }

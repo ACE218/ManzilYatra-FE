@@ -1,158 +1,281 @@
-/* Recommendation Styles */
 .recommendation {
-  width: 100%;
-  padding: 4rem 0;
-  background-color: #f9f5ff;
-}
-
-.recommendation-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  padding: 64px 0;
+  background: linear-gradient(to bottom, #1C2526, #2E3B3E);
+  position: relative;
+  overflow: hidden;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 48px;
 }
 
 .title h1 {
-  font-size: 2.5rem;
-  color: #4a4a4a;
-  margin-bottom: 0.5rem;
+  font-size: 3rem;
   font-weight: 700;
+  color: #ECF0F1;
+  margin-bottom: 16px;
+  position: relative;
 }
 
-.subtitle {
-  font-size: 1.1rem;
-  color: #7a7a7a;
+.title h1::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: #F36F09;
+  margin: 0.5rem auto;
+  border-radius: 2px;
+  animation: expandWidth 1.5s ease-in-out infinite;
+}
+
+.title p {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: #BDC3C7;
   max-width: 600px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.categoryBar ul {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin-top: 32px;
+}
+
+.categoryBar li {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ECF0F1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: 1px solid #BDC3C7 W;
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.categoryBar li.active,
+.categoryBar li:hover {
+  color: #ECF0F1;
+  background: #F36F09;
+  border-color: #F36F09;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.categoryBar li::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.categoryBar li:hover::before {
+  width: 100px;
+  height: 100px;
 }
 
 .recommendationBox {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
 }
 
 .box {
-  background-color: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: left;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
 }
+
+.box:nth-child(1) { animation-delay: 0.1s; }
+.box:nth-child(2) { animation-delay: 0.2s; }
+.box:nth-child(3) { animation-delay: 0.3s; }
 
 .box:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.image-container {
-  height: 250px;
-  overflow: hidden;
-}
-
-.image-wrapper {
+.box img {
   width: 100%;
-  height: 100%;
-}
-
-.image-wrapper img {
-  width: 100%;
-  height: 100%;
+  height: 240px;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.box:hover .image-wrapper img {
-  transform: scale(1.1);
-}
-
-.package-content {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.package-header {
-  margin-bottom: 1rem;
-}
-
-.package-id {
-  display: block;
-  font-size: 0.85rem;
-  color: #8a8a8a;
-  margin-bottom: 0.5rem;
-}
-
-.package-name {
-  font-size: 1.4rem;
-  color: #333;
-  font-weight: 600;
-}
-
-.package-description {
-  color: #666;
+  border-radius: 10px;
   margin-bottom: 1.5rem;
-  flex-grow: 1;
+  transition: transform 0.5s ease-in-out;
 }
 
-.price {
+.box:hover img {
+  transform: scale(1.05);
+}
+
+.box h3 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 0.75rem;
+}
+
+.box p {
+  font-size: 1rem;
+  line-height: 1.625rem;
+  color: #4B5563;
+  margin-bottom: 1.5rem;
+}
+
+.box .price {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.price-label {
-  color: #4a4a4a;
-  font-weight: 500;
+.box .price div img {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
-.price-value {
-  font-size: 1.3rem;
-  color: #6a5acd;
+.box .price div img:hover {
+  transform: scale(1.2);
+}
+
+.box .price p {
+  font-size: 1.5rem;
   font-weight: 700;
+  color: #F36F09;
+  transition: color 0.3s ease;
 }
 
-.package-cta {
-  text-align: center;
-  padding: 0.75rem;
-  background-color: #6a5acd;
-  color: white;
-  border-radius: 8px;
+.box .price p:hover {
+  color: #E67E22;
+}
+
+.box .details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #4B5563;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #BDC3C7;
+}
+
+.box .details svg {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+  color: #F36F09;
+  transition: color 0.3s ease;
+}
+
+.box .details svg:hover {
+  color: #E67E22;
+}
+
+.explore-button {
+  margin-top: 2rem;
+  padding: 0.8rem 2rem;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  border-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  background: #F36F09;
+  color: #ECF0F1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
-.box:hover .package-cta {
-  background-color: #5a4acd;
+.explore-button:hover {
+  background: #E67E22;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive Design */
-@media screen and (max-width: 1024px) {
-  .recommendationBox {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.explore-button::before {
+  content: "→";
+  margin-left: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease, margin-left 0.3s ease;
 }
 
-@media screen and (max-width: 768px) {
-  .recommendation {
-    padding: 2rem 0;
-  }
+.explore-button:hover::before {
+  opacity: 1;
+  margin-left: 1rem;
+}
 
-  .title h1 {
-    font-size: 2rem;
-  }
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: #F36F09;
+  color: #ECF0F1;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
 
-  .recommendationBox {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2C3E50;
+  color: #ECF0F1;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes expandWidth {
+  0% { width: 0; }
+  50% { width: 150px; }
+  100% { width: 100px; }
 }

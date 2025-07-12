@@ -8,19 +8,28 @@ import {
   EyeOff, 
   MapPin, 
   ArrowLeft,
-  UserCheck,
+  User,
+  Phone,
+  Calendar,
+  UserPlus,
   AlertCircle,
+  CheckCircle,
   Shield,
   Sparkles
 } from "lucide-react";
 import { authService } from "../services/api";
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    mobile: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [notification, setNotification] = useState({ show: false, message: "", type: "" });
@@ -47,6 +56,24 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters";
+    }
+    
+    if (!formData.age) {
+      newErrors.age = "Age is required";
+    } else if (formData.age < 18 || formData.age > 100) {
+      newErrors.age = "Age must be between 18 and 100";
+    }
+    
+    if (!formData.mobile) {
+      newErrors.mobile = "Mobile number is required";
+    } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
+      newErrors.mobile = "Please enter a valid 10-digit Indian mobile number";
+    }
+    
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -59,32 +86,49 @@ const Login = () => {
       newErrors.password = "Password must be at least 6 characters";
     }
     
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) return;
     
     setIsLoading(true);
-    
+
     try {
-      const response = await authService.login(formData);
-      console.log("Login successful:", response);
+      const registerData = {
+        name: formData.name.trim(),
+        age: parseInt(formData.age),
+        mobile: formData.mobile,
+        email: formData.email.toLowerCase(),
+        password: formData.password
+      };
+
+      const response = await authService.register(registerData);
+      console.log("Registration successful:", response);
       
-      // Store user data if needed
-      if (response.user) {
-        localStorage.setItem('user', JSON.stringify(response.user));
-        showNotification("Welcome back! Login successful.", "success");
-      }
+      showNotification("Account created successfully! Redirecting to login...", "success");
       
-      // Navigate to home page after successful login
-      setTimeout(() => navigate("/"), 1500);
+      // Navigate to login page after successful registration
+      setTimeout(() => {
+        navigate("/login", { 
+          state: { 
+            message: "Registration successful! Please login to continue.",
+            email: formData.email 
+          } 
+        });
+      }, 1500);
     } catch (error) {
-      console.error("Login failed:", error);
-      showNotification(error.message || "Login failed. Please check your credentials.", "error");
+      console.error("Registration error:", error);
+      showNotification(error.message || "Registration failed. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -140,7 +184,7 @@ const Login = () => {
               color: notification.type === 'error' ? '#991b1b' : '#166534',
               borderLeft: `4px solid ${notification.type === 'error' ? '#ef4444' : '#22c55e'}`
             }}>
-              {notification.type === 'error' ? <AlertCircle size={20} /> : <UserCheck size={20} />}
+              {notification.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
               <span style={{ fontWeight: '500' }}>{notification.message}</span>
             </div>
           </motion.div>
@@ -195,7 +239,7 @@ const Login = () => {
         transition={{ duration: 0.6 }}
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '520px',
           background: 'white',
           borderRadius: '32px',
           boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
@@ -238,7 +282,7 @@ const Login = () => {
               border: '2px solid rgba(255, 255, 255, 0.3)'
             }}
           >
-            <Shield size={32} />
+            <UserPlus size={32} />
           </motion.div>
 
           <motion.div
@@ -271,14 +315,14 @@ const Login = () => {
               fontWeight: '600', 
               margin: '0 0 8px 0' 
             }}>
-              Welcome Back!
+              Join ManzilYatra!
             </h2>
             <p style={{ 
               fontSize: '16px', 
               opacity: 0.9, 
               margin: 0 
             }}>
-              Sign in to continue your journey with us
+              Create your account and start exploring incredible destinations
             </p>
           </motion.div>
         </div>
@@ -290,7 +334,202 @@ const Login = () => {
           transition={{ delay: 0.4 }}
           style={{ padding: '48px 32px' }}
         >
-          <form onSubmit={handleLogin} style={{ marginBottom: '32px' }}>
+          <form onSubmit={handleSubmit} style={{ marginBottom: '32px' }}>
+            {/* Name Field */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                <User size={16} />
+                Full Name
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  style={{
+                    width: '100%',
+                    padding: '16px',
+                    paddingLeft: '48px',
+                    borderRadius: '12px',
+                    border: `2px solid ${errors.name ? '#ef4444' : '#e5e7eb'}`,
+                    fontSize: '16px',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    background: '#f9fafb'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#667eea';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                    e.target.style.background = 'white';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = errors.name ? '#ef4444' : '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
+                    e.target.style.background = '#f9fafb';
+                  }}
+                />
+                <User style={{
+                  position: 'absolute',
+                  left: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#9ca3af'
+                }} size={18} />
+              </div>
+              {errors.name && (
+                <span style={{
+                  display: 'block',
+                  color: '#ef4444',
+                  fontSize: '14px',
+                  marginTop: '6px'
+                }}>
+                  {errors.name}
+                </span>
+              )}
+            </div>
+
+            {/* Age and Mobile Row */}
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+              {/* Age Field */}
+              <div style={{ flex: 1 }}>
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#374151',
+                  marginBottom: '8px'
+                }}>
+                  <Calendar size={16} />
+                  Age
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="number"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    placeholder="Age"
+                    min="18"
+                    max="100"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      paddingLeft: '48px',
+                      borderRadius: '12px',
+                      border: `2px solid ${errors.age ? '#ef4444' : '#e5e7eb'}`,
+                      fontSize: '16px',
+                      outline: 'none',
+                      transition: 'all 0.3s ease',
+                      background: '#f9fafb'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#667eea';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                      e.target.style.background = 'white';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.age ? '#ef4444' : '#e5e7eb';
+                      e.target.style.boxShadow = 'none';
+                      e.target.style.background = '#f9fafb';
+                    }}
+                  />
+                  <Calendar style={{
+                    position: 'absolute',
+                    left: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9ca3af'
+                  }} size={18} />
+                </div>
+                {errors.age && (
+                  <span style={{
+                    display: 'block',
+                    color: '#ef4444',
+                    fontSize: '14px',
+                    marginTop: '6px'
+                  }}>
+                    {errors.age}
+                  </span>
+                )}
+              </div>
+
+              {/* Mobile Field */}
+              <div style={{ flex: 2 }}>
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#374151',
+                  marginBottom: '8px'
+                }}>
+                  <Phone size={16} />
+                  Mobile Number
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="tel"
+                    name="mobile"
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    placeholder="10-digit mobile number"
+                    maxLength="10"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      paddingLeft: '48px',
+                      borderRadius: '12px',
+                      border: `2px solid ${errors.mobile ? '#ef4444' : '#e5e7eb'}`,
+                      fontSize: '16px',
+                      outline: 'none',
+                      transition: 'all 0.3s ease',
+                      background: '#f9fafb'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#667eea';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                      e.target.style.background = 'white';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.mobile ? '#ef4444' : '#e5e7eb';
+                      e.target.style.boxShadow = 'none';
+                      e.target.style.background = '#f9fafb';
+                    }}
+                  />
+                  <Phone style={{
+                    position: 'absolute',
+                    left: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9ca3af'
+                  }} size={18} />
+                </div>
+                {errors.mobile && (
+                  <span style={{
+                    display: 'block',
+                    color: '#ef4444',
+                    fontSize: '14px',
+                    marginTop: '6px'
+                  }}>
+                    {errors.mobile}
+                  </span>
+                )}
+              </div>
+            </div>
+
             {/* Email Field */}
             <div style={{ marginBottom: '24px' }}>
               <label style={{
@@ -374,7 +613,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder="Create a strong password"
                   style={{
                     width: '100%',
                     padding: '16px',
@@ -435,44 +674,85 @@ const Login = () => {
               )}
             </div>
 
-            {/* Options */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '32px'
-            }}>
+            {/* Confirm Password Field */}
+            <div style={{ marginBottom: '32px' }}>
               <label style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                cursor: 'pointer',
                 fontSize: '14px',
-                color: '#6b7280'
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '8px'
               }}>
+                <Shield size={16} />
+                Confirm Password
+              </label>
+              <div style={{ position: 'relative' }}>
                 <input
-                  type="checkbox"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
                   style={{
-                    width: '16px',
-                    height: '16px',
-                    accentColor: '#667eea'
+                    width: '100%',
+                    padding: '16px',
+                    paddingLeft: '48px',
+                    paddingRight: '48px',
+                    borderRadius: '12px',
+                    border: `2px solid ${errors.confirmPassword ? '#ef4444' : '#e5e7eb'}`,
+                    fontSize: '16px',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    background: '#f9fafb'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#667eea';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                    e.target.style.background = 'white';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = errors.confirmPassword ? '#ef4444' : '#e5e7eb';
+                    e.target.style.boxShadow = 'none';
+                    e.target.style.background = '#f9fafb';
                   }}
                 />
-                Remember me
-              </label>
-              <Link
-                to="/forgot-password"
-                style={{
-                  color: '#667eea',
-                  textDecoration: 'none',
+                <Shield style={{
+                  position: 'absolute',
+                  left: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#9ca3af'
+                }} size={18} />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#9ca3af',
+                    cursor: 'pointer',
+                    padding: '4px'
+                  }}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <span style={{
+                  display: 'block',
+                  color: '#ef4444',
                   fontSize: '14px',
-                  fontWeight: '500'
-                }}
-                onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
-              >
-                Forgot Password?
-              </Link>
+                  marginTop: '6px'
+                }}>
+                  {errors.confirmPassword}
+                </span>
+              )}
             </div>
 
             {/* Submit Button */}
@@ -509,12 +789,12 @@ const Login = () => {
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite'
                   }} />
-                  Signing In...
+                  Creating Account...
                 </>
               ) : (
                 <>
                   <Sparkles size={18} />
-                  Sign In
+                  Create Account
                 </>
               )}
             </motion.button>
@@ -544,17 +824,17 @@ const Login = () => {
             </span>
           </div>
 
-          {/* Sign Up Link */}
+          {/* Login Link */}
           <div style={{ textAlign: 'center' }}>
             <p style={{ 
               color: '#6b7280', 
               margin: '0 0 8px 0',
               fontSize: '14px' 
             }}>
-              Don't have an account?
+              Already have an account?
             </p>
             <Link
-              to="/register"
+              to="/login"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -576,8 +856,8 @@ const Login = () => {
                 e.target.style.color = '#667eea';
               }}
             >
-              <UserCheck size={16} />
-              Create Account
+              <Shield size={16} />
+              Sign In
             </Link>
           </div>
         </motion.div>
@@ -594,4 +874,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
